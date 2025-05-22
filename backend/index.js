@@ -3,6 +3,9 @@ import express from 'express'
 import { ObjectId } from 'mongodb'
 const app = express()
 const port = 3000
+import cors from 'cors'
+
+app.use(cors())
 
 app.get("/clients", async (req, res) => {
   let collection = await db.collection("clientes");
@@ -48,8 +51,6 @@ app.get("/transactions/:id", async (req, res) => {
   let result = await collection.findOne(query);
   res.send(result).status(200);
 });
-
-
 
 app.listen(port, () => {
   console.log(`HOT TO GO: ${port}`)
