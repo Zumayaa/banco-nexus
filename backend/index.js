@@ -30,10 +30,11 @@ app.get("/accounts", async (req, res) => {
   res.send(results).status(200);
 });
 
-app.get("/accounts/:id", async (req, res) => {
+app.get("/accounts/:curp", async (req, res) => {
   let collection = await db.collection("cuentas");
-  let query = { _id: new ObjectId(req.params.id) };
-  let result = await collection.findOne(query);
+  let query = { cliente: req.params.curp };
+  let result = await collection.find(query).toArray();
+  console.log(result);
   res.send(result).status(200);
 });
 
@@ -45,11 +46,11 @@ app.get("/transactions", async (req, res) => {
   res.send(results).status(200);
 });
 
-app.get("/transactions/:id", async (req, res) => {
-  let collection = await db.collection("transacciones");
-  let query = { _id: new ObjectId(req.params.id) };
-  let result = await collection.findOne(query);
-  res.send(result).status(200);
+app.get("/transactions/:account", async (req, res) => {
+  let collection = db.collection("transacciones");
+  var query = { cuenta: req.params.account };
+  const acc = await collection.find(query).toArray();
+  res.send(acc).status(200);
 });
 
 app.listen(port, () => {
