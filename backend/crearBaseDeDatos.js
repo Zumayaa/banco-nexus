@@ -1,5 +1,5 @@
 // crearBaseDeDatos.js
-const { MongoClient } = require('mongodb');
+import { MongoClient } from 'mongodb';
 const uri = 'mongodb://0.0.0.0:27017';
 const client = new MongoClient(uri);
 async function crearBD() {
