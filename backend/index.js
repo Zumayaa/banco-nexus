@@ -39,7 +39,7 @@ app.get("/accounts/:curp", async (req, res) => {
 });
 
 app.get("/transactions", async (req, res) => {
-  let collection = await db.collection("cuentas");
+  let collection = await db.collection("transacciones");
   let results = await collection.find({})
     .limit(50)
     .toArray();
