@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Banco</title>
+</head>
+
+<body>
+    <h1>Banco</h1>
+
+    <section>
+        <h2>Operaciones bancarias</h2>
+
+        <label for="montoInput">Monto</label>
+        <input type="number" id="montoInput" placeholder="Ingresa monto" />
+
+        <div>
+            <button class="retirar" onclick="op('retiro')">Retirar</button>
+            <button class="depositar" onclick="op('deposito')">Depositar</button>
+        </div>
+
+        <p id="mensaje" style="margin-top: 1em;"></p>
+    </section>
+
+    <section>
+        <h2>Consulta cuenta</h2>
+        <label for="cuentaInput">Número de cuenta</label>
+        <input type="number" id="cuentaInput" placeholder="Ingresa tu cuenta" />
+        <button class="btn-consultar" onclick="consultar()">Consultar</button>
+    
+        <div id="resultado" class="resultado" style="display: none;"></div>
+    </section>
+</body>
+
+</html>
