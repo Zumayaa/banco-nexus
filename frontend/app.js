@@ -14,18 +14,34 @@ async function consultarCuenta() {
   }
 
   try {
-    const res = await fetch(`http://localhost:3000/api/cuenta/${cuenta}`);
-    const json = await res.json();
-
-    if (json.error) {
-      mostrarMensaje(json.error, true);
-      datos = null;
-      document.getElementById('resultado').innerHTML = '';
-    } else {
-      datos = json;
-      mostrarMensaje('');
-      mostrarDatos();
+    const resCuenta = await fetch(`http://localhost:3000/accounts/${cuenta}`);
+    const cuentaData = await resCuenta.json();
+    
+    if (!cuentaData) {
+      mostrarMensaje('Cuenta no encontrada', true);
+      return;
     }
+
+    const resCliente = await fetch(`http://localhost:3000/clients/${cuentaData.cliente}`);
+    const clienteData = await resCliente.json();
+
+    const resTrans = await fetch(`http://localhost:3000/transactions`);
+    const todasTransacciones = await resTrans.json();
+    
+    const transaccionesData = todasTransacciones.filter(t => t.cuenta === cuenta);
+
+    datos = {
+      nombre: clienteData.nombre,
+      saldo: cuentaData.saldo,
+      transacciones: transaccionesData.map(t => ({
+        tipo: t.tipo,
+        monto: t.monto,
+        fecha: t.fecha
+      }))
+    };
+
+    mostrarMensaje('');
+    mostrarDatos();
   } catch (err) {
     console.error(err);
     mostrarMensaje('Error al consultar la cuenta.', true);
@@ -49,9 +65,10 @@ function mostrarDatos() {
       <ul>${transacciones}</ul>
     </div>
   `;
+  contenedor.style.display = 'block';
 }
 
-async function op(tipo) {
+async function realizarOperacion(tipo) {
   const cuenta = document.getElementById('cuentaInput').value;
   const monto = document.getElementById('montoInput').value;
 
@@ -60,20 +77,49 @@ async function op(tipo) {
     return;
   }
 
-  const url = tipo === 'deposito' ? '/api/deposito' : '/api/retiro';
   try {
-    const res = await fetch(`http://localhost:3000${url}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        cuentaId: parseInt(cuenta),
-        monto: parseFloat(monto)
-      })
+    const resCuenta = await fetch(`http://localhost:3000/accounts/${cuenta}`);
+    const cuentaData = await resCuenta.json();
+    
+    if (!cuentaData) {
+      mostrarMensaje('Cuenta no encontrada', true);
+      return;
+    }
+
+    if (tipo === 'retiro' && cuentaData.saldo < parseFloat(monto)) {
+      mostrarMensaje('Saldo insuficiente', true);
+      return;
+    }
+
+    const transaccion = {
+      cuenta: cuenta,
+      tipo: tipo,
+      monto: parseFloat(monto),
+      fecha: new Date()
+    };
+
+    const nuevoSaldo = tipo === 'deposito' 
+      ? cuentaData.saldo + parseFloat(monto)
+      : cuentaData.saldo - parseFloat(monto);
+
+    await fetch(`http://localhost:3000/accounts/${cuenta}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ saldo: nuevoSaldo })
     });
 
-    const data = await res.json();
-    mostrarMensaje(data.mensaje || data.error, !!data.error);
-    consultar(); 
+    await fetch('http://localhost:3000/transactions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(transaccion)
+    });
+
+    mostrarMensaje(`${tipo === 'deposito' ? 'Depósito' : 'Retiro'} realizado con éxito`);
+    consultarCuenta(); 
   } catch (err) {
     console.error(err);
     mostrarMensaje('Error en la operación.', true);
