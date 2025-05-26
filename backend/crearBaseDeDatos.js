@@ -6,6 +6,7 @@ async function crearBD() {
   try {
     await client.connect();
     const db = client.db('banco_nexus');
+    db.dropDatabase()
 
     const clientes = db.collection('clientes');
     const cuentas = db.collection('cuentas');
@@ -38,16 +39,16 @@ async function crearBD() {
     ];
 
     const transaccionesData = [
-      { cuenta: '100', tipo: 'deposito', monto: 1000, fecha: new Date('2025-05-01T10:00:00Z') },
-      { cuenta: '101', tipo: 'retiro', monto: 500, fecha: new Date('2025-05-02T11:00:00Z') },
-      { cuenta: '102', tipo: 'deposito', monto: 1500, fecha: new Date('2025-05-03T12:00:00Z') },
-      { cuenta: '103', tipo: 'retiro', monto: 700, fecha: new Date('2025-05-04T13:00:00Z') },
-      { cuenta: '104', tipo: 'deposito', monto: 1200, fecha: new Date('2025-05-05T14:00:00Z') },
-      { cuenta: '105', tipo: 'retiro', monto: 800, fecha: new Date('2025-05-06T15:00:00Z') },
-      { cuenta: '106', tipo: 'deposito', monto: 1100, fecha: new Date('2025-05-07T16:00:00Z') },
-      { cuenta: '107', tipo: 'retiro', monto: 600, fecha: new Date('2025-05-08T17:00:00Z') },
-      { cuenta: '108', tipo: 'deposito', monto: 1300, fecha: new Date('2025-05-09T18:00:00Z') },
-      { cuenta: '109', tipo: 'retiro', monto: 900, fecha: new Date('2025-05-10T19:00:00Z') }
+      { cuenta: '100', sucursal: "chametla", tipo: 'deposito', monto: 1000, fecha: new Date('2025-05-01T10:00:00Z') },
+      { cuenta: '101', sucursal: "chametla", tipo: 'retiro', monto: 500, fecha: new Date('2025-05-02T11:00:00Z') },
+      { cuenta: '102', sucursal: "chametla", tipo: 'deposito', monto: 1500, fecha: new Date('2025-05-03T12:00:00Z') },
+      { cuenta: '103', sucursal: "chametla", tipo: 'retiro', monto: 700, fecha: new Date('2025-05-04T13:00:00Z') },
+      { cuenta: '104', sucursal: "chametla", tipo: 'deposito', monto: 1200, fecha: new Date('2025-05-05T14:00:00Z') },
+      { cuenta: '105', sucursal: "chametla", tipo: 'retiro', monto: 800, fecha: new Date('2025-05-06T15:00:00Z') },
+      { cuenta: '106', sucursal: "chametla", tipo: 'deposito', monto: 1100, fecha: new Date('2025-05-07T16:00:00Z') },
+      { cuenta: '107', sucursal: "chametla", tipo: 'retiro', monto: 600, fecha: new Date('2025-05-08T17:00:00Z') },
+      { cuenta: '108', sucursal: "chametla", tipo: 'deposito', monto: 1300, fecha: new Date('2025-05-09T18:00:00Z') },
+      { cuenta: '109', sucursal: "chametla", tipo: 'retiro', monto: 900, fecha: new Date('2025-05-10T19:00:00Z') }
     ];
 
     await clientes.insertMany(clientesData);

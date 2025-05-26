@@ -4,8 +4,11 @@ import { ObjectId } from 'mongodb'
 const app = express()
 const port = 3000
 import cors from 'cors'
+const transactions = await db.collection("transacciones");
+const accounts = await db.collection("cuentas");
 
 app.use(cors())
+app.use(express.json())
 
 app.get("/clients", async (req, res) => {
   let collection = await db.collection("clientes");
@@ -33,7 +36,7 @@ app.get("/accounts", async (req, res) => {
 app.get("/accounts/:curp", async (req, res) => {
   let collection = await db.collection("cuentas");
   let query = { cliente: req.params.curp };
-  let result = await collection.find(query).toArray();
+  let result = await collection.findOne(query);
   console.log(result);
   res.send(result).status(200);
 });
@@ -45,6 +48,51 @@ app.get("/transactions", async (req, res) => {
     .toArray();
   res.send(results).status(200);
 });
+
+app.post("/transactions", async (req, res) => {
+  const { quantity, action, account } = req.body
+
+  if (quantity < 0) {
+    res.status(400).json({ error: "Numeros negativos no!" })
+    return
+  }
+
+  const query = { cuenta: account };
+  const acc = await accounts.findOne(query);
+
+  if (!acc) {
+    res.status(400).json({ error: "La cuenta no existe" })
+    return
+  }
+
+
+  switch (action) {
+    case "deposit":
+      acc.saldo += quantity
+      break;
+    case "withdraw":
+      if (acc.saldo < quantity) {
+        res.status(400).json({ error: "Saldo insuficiente" })
+        return
+      }
+      acc.saldo -= quantity
+      break;
+  }
+
+  const new_values = { $set: acc }
+  console.log(new_values);
+
+  accounts.updateOne(query, new_values, function(err, res) {
+    if (err) {
+      res.status(400).json({ error: "Error extra;o mongodbiano!" }).status(400)
+      return
+    }
+  })
+
+
+  res.json({ data: "todo" })
+});
+
 
 app.get("/transactions/:account", async (req, res) => {
   let collection = db.collection("transacciones");

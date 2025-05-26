@@ -87,7 +87,7 @@ async function realizarOperacion(tipo) {
   try {
     const resCuenta = await fetch(`http://localhost:3000/accounts/${cuenta}`);
     const cuentaData = await resCuenta.json();
-    
+
     if (!cuentaData) {
       mostrarMensaje('Cuenta no encontrada', true);
       return;
@@ -105,7 +105,7 @@ async function realizarOperacion(tipo) {
       fecha: new Date()
     };
 
-    const nuevoSaldo = tipo === 'deposito' 
+    const nuevoSaldo = tipo === 'deposito'
       ? cuentaData.saldo + parseFloat(monto)
       : cuentaData.saldo - parseFloat(monto);
 
@@ -126,7 +126,7 @@ async function realizarOperacion(tipo) {
     });
 
     mostrarMensaje(`${tipo === 'deposito' ? 'Depósito' : 'Retiro'} realizado con éxito`);
-    consultarCuenta(); 
+    consultarCuenta();
   } catch (err) {
     console.error(err);
     mostrarMensaje('Error en la operación.', true);
@@ -147,7 +147,7 @@ async function consultarClientesConTodo() {
     for (const client of clientes) {
       const cuentaData = cuentas.find(c => c.cliente === client.curp);
 
-      if (!cuentaData) continue; 
+      if (!cuentaData) continue;
 
       const transCliente = transacciones.filter(t => t.cuenta === cuentaData.cuenta);
 
@@ -161,12 +161,11 @@ async function consultarClientesConTodo() {
       .map(client => {
         const transaccionesHTML = client.transacciones.map(t => {
           const fecha = new Date(t.fecha).toLocaleDateString();
-          return `<li>${t.tipo} de $${t.monto} el ${fecha}</li>`;
+          return `<li>${t.tipo} de $${t.monto} el ${fecha} en ${t.sucursal}</li>`;
         }).join('');
-
         return `
           <div class="cliente">
-            <p><strong>Nombre:</strong> ${client.nombre}</p>
+            <a href="./account.html?cuenta=${client.cuenta.cuenta}&curp=${client.curp}"><strong>Nombre:</strong> ${client.nombre}</a>
             <p><strong>Cuenta:</strong> ${client.cuenta.cuenta}</p>
             <p><strong>Saldo:</strong> $${client.cuenta.saldo.toFixed(2)}</p>
             <h5>Movimientos:</h5>

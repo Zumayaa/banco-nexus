@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <a style="color: pink;" href="/">Inicio</a>
+    <h1>
+    </h1>
+    <div id="balance">
+    </div>
+    <div style="margin-top: 5px;" id="error">
+    </div>
+    <div>
+        <label for="quantity">Cantidad</label>
+        <input type="number" name="" value="123" id="quantity">
+        <button onclick="trans('withdraw')" type="" data-action="withdraw"
+            style="background-color: pink;">Retirar</button>
+        <button onclick="trans('deposit')" type="" style="background-color: cyan;">Depositar</button>
+    </div>
+</body>
+
+<script>
+    let params = new URL(document.location.toString()).searchParams;
+    let account = params.get("cuenta");
+    let curp = params.get("curp");
+    const h1 = document.querySelector('h1')
+    const balance = document.getElementById('balance')
+    const error = document.getElementById('error')
+
+    async function get_profile() {
+        const acc_data = await fetch(`http://localhost:3000/accounts/${curp}`)
+        const json = await acc_data.json()
+        h1.appendChild(document.createTextNode(json.cliente))
+        balance.appendChild(document.createTextNode(`saldo: ${json.saldo}`))
+    }
+
+    async function trans(action) {
+        const res = await fetch('')
+        const quantity = parseInt(document.getElementById("quantity").value)
+        const response = await fetch(`http://localhost:3000/transactions`, {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({account, action, quantity})
+        })
+
+        if (!response.ok) {
+            const json = await response.json();
+            error.innerHTML = `<span style="padding: 5px; border-radius: 5px; background-color: red;">${json.error}</span>`
+        } else {
+            error.innerHTML = ``
+            window.location.reload()
+        }
+
+    }
+
+    get_profile()
+</script>
+
+</html>
