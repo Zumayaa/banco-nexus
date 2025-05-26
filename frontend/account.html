@@ -19,6 +19,11 @@
     <div>
         <label for="quantity">Cantidad</label>
         <input type="number" name="" value="123" id="quantity">
+        <select id="sucursal">
+            <option value="chametla">Chametla</option>
+            <option value="cdmx">CDMX</option>
+            <option value="centenario">Centenario</option>
+        </select>
         <button onclick="trans('withdraw')" type="" data-action="withdraw"
             style="background-color: pink;">Retirar</button>
         <button onclick="trans('deposit')" type="" style="background-color: cyan;">Depositar</button>
@@ -32,6 +37,7 @@
     const h1 = document.querySelector('h1')
     const balance = document.getElementById('balance')
     const error = document.getElementById('error')
+    const sucursal = document.getElementById('sucursal')
 
     async function get_profile() {
         const acc_data = await fetch(`http://localhost:3000/accounts/${curp}`)
@@ -49,7 +55,7 @@
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({account, action, quantity})
+            body: JSON.stringify({account, action, quantity, sucursal: sucursal.value})
         })
 
         if (!response.ok) {

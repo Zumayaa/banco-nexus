@@ -50,7 +50,7 @@ app.get("/transactions", async (req, res) => {
 });
 
 app.post("/transactions", async (req, res) => {
-  const { quantity, action, account } = req.body
+  const { quantity, action, account, sucursal } = req.body
 
   if (quantity < 0) {
     res.status(400).json({ error: "Numeros negativos no!" })
@@ -65,6 +65,10 @@ app.post("/transactions", async (req, res) => {
     return
   }
 
+  const xd = {
+    deposit: "deposito",
+    withdraw: "retiro",
+  }
 
   switch (action) {
     case "deposit":
@@ -79,8 +83,17 @@ app.post("/transactions", async (req, res) => {
       break;
   }
 
+  const transaction = {
+    cuenta: account,
+    sucursal: sucursal,
+    tipo: xd[action],
+    monto: quantity,
+    fecha: new Date().toISOString(),
+  }
+
   const new_values = { $set: acc }
-  console.log(new_values);
+
+  transactions.insertOne(transaction)
 
   accounts.updateOne(query, new_values, function(err, res) {
     if (err) {
@@ -88,7 +101,6 @@ app.post("/transactions", async (req, res) => {
       return
     }
   })
-
 
   res.json({ data: "todo" })
 });
