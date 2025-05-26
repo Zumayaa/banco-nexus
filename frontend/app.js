@@ -181,4 +181,5 @@ async function consultarClientesConTodo() {
     mostrarMensaje('Error al consultar todos los clientes.', true);
   }
 }
-
+consultarClientesConTodo()
+mostrarDatos()
