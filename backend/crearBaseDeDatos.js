@@ -1,5 +1,5 @@
 import { MongoClient } from 'mongodb';
-const uri = 'mongodb://localhost:27017';
+const uri = 'mongodb://0.0.0.0:27017,0.0.0.0:27018,0.0.0.0:27019/?replicaSet=rsBanco';
 const client = new MongoClient(uri);
 
 async function crearBD() {
