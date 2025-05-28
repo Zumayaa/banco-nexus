@@ -14,7 +14,7 @@ async function consultarCuenta() {
   }
 
   try {
-    const resCliente = await fetch(`http://localhost:3000/clients`);
+    const resCliente = await fetch(`http://25.2.129.231:3000/clients`);
     const clientes = await resCliente.json();
     const clienteData = clientes.find(c => c.curp === curp);
 
@@ -23,7 +23,7 @@ async function consultarCuenta() {
       return;
     }
 
-    const resCuenta = await fetch(`http://localhost:3000/accounts/${curp}`);
+    const resCuenta = await fetch(`http://25.2.129.231:3000/accounts/${curp}`);
     const cuentas = await resCuenta.json();
 
     if (!cuentas || cuentas.length === 0) {
@@ -33,7 +33,7 @@ async function consultarCuenta() {
 
     const cuentaData = cuentas[0];
 
-    const resTrans = await fetch(`http://localhost:3000/transactions/${cuentaData.cuenta}`);
+    const resTrans = await fetch(`http://25.2.129.231:3000/transactions/${cuentaData.cuenta}`);
     const transaccionesData = await resTrans.json();
 
     datos = {
