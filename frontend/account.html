@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <a style="color: pink;" href="/">Inicio</a>
+    <a style="color: pink;" href="frontend/">Inicio</a>
     <h1>
     </h1>
     <div id="balance">
@@ -40,7 +40,7 @@
     const sucursal = document.getElementById('sucursal')
 
     async function get_profile() {
-        const acc_data = await fetch(`http://localhost:3000/accounts/${curp}`)
+        const acc_data = await fetch(`http://25.2.129.231:3000/accounts/${curp}`)
         const json = await acc_data.json()
         h1.appendChild(document.createTextNode(json.cliente))
         balance.appendChild(document.createTextNode(`saldo: ${json.saldo}`))
@@ -49,7 +49,7 @@
     async function trans(action) {
         const res = await fetch('')
         const quantity = parseInt(document.getElementById("quantity").value)
-        const response = await fetch(`http://localhost:3000/transactions`, {
+        const response = await fetch(`http://25.2.129.231:3000/transactions`, {
             method: "POST",
             headers: {
                 'Accept': 'application/json',

@@ -85,7 +85,7 @@ async function realizarOperacion(tipo) {
   }
 
   try {
-    const resCuenta = await fetch(`http://localhost:3000/accounts/${cuenta}`);
+    const resCuenta = await fetch(`http://25.2.129.231:3000/accounts/${cuenta}`);
     const cuentaData = await resCuenta.json();
 
     if (!cuentaData) {
@@ -109,7 +109,7 @@ async function realizarOperacion(tipo) {
       ? cuentaData.saldo + parseFloat(monto)
       : cuentaData.saldo - parseFloat(monto);
 
-    await fetch(`http://localhost:3000/accounts/${cuenta}`, {
+    await fetch(`http://25.2.129.231:3000/accounts/${cuenta}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -117,7 +117,7 @@ async function realizarOperacion(tipo) {
       body: JSON.stringify({ saldo: nuevoSaldo })
     });
 
-    await fetch('http://localhost:3000/transactions', {
+    await fetch('http://25.2.129.231:3000/transactions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -135,13 +135,13 @@ async function realizarOperacion(tipo) {
 
 async function consultarClientesConTodo() {
   try {
-    const resClientes = await fetch("http://localhost:3000/clients");
+    const resClientes = await fetch("http://25.2.129.231:3000/clients");
     const clientes = await resClientes.json();
 
-    const resCuentas = await fetch("http://localhost:3000/accounts");
+    const resCuentas = await fetch("http://25.2.129.231:3000/accounts");
     const cuentas = await resCuentas.json();
 
-    const resTrans = await fetch("http://localhost:3000/transactions");
+    const resTrans = await fetch("http://25.2.129.231:3000/transactions");
     const transacciones = await resTrans.json();
 
     for (const client of clientes) {
